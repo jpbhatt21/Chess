@@ -68,16 +68,20 @@ def draw_rook(color,x,y):
         pygame.draw.rect(w,color,(y - bx // 2,x + bx * 6,bx * 6,bx * 2))
         pygame.draw.rect(w,(0,0,0),(y - bx // 2,x + bx * 6,bx * 6,bx * 2),bx // 5)
 def draw_pawn(color,x,y):
-    if Grid[x][y] // 10 >5:
+    if Grid[x][y] // 10 > 5:
         if Grid[x][y] % 2 == 0:
             color = (255,255,255)
         bx = bw // 10
         y = y * bw
-        x = x * bw + bx
-        pygame.draw.circle(w,color,(y+bw//2,x+bx),bx)
-        pygame.draw.circle(w,(0,0,0),(y+bw//2,x+bw),bx,bx // 5)
-        pygame.draw.rect(w,color,(y+bx ,x + bx * 6,bx * 6,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx ,x + bx * 6,bx * 6,bx * 2),bx // 5)
+        x = x * bw + bx + bx // 2
+        pygame.draw.circle(w,color,(y + bw // 2,x + bx),bx)
+        pygame.draw.circle(w,(0,0,0),(y + bw // 2,x + bx),bx,bx // 5)
+        pygame.draw.rect(w,color,(y + 4 * bx - bx // 2,x + bx * 2,bx * 3,bx))
+        pygame.draw.rect(w,(0,0,0),(y + 4 * bx - bx // 2,x + bx * 2,bx * 3,bx),bx // 5)
+        pygame.draw.rect(w,color,(y + bx * 4,x + bx * 3,2 * bx,3 * bx))
+        pygame.draw.rect(w,(0,0,0),(y + bx * 4,x + bx * 3,2 * bx,3 * bx),bx // 5)
+        pygame.draw.rect(w,color,(y + 2 * bx,x + bx * 6,bx * 6,bx * 2))
+        pygame.draw.rect(w,(0,0,0),(y + 2 * bx,x + bx * 6,bx * 6,bx * 2),bx // 5)
 def draw_knight(color,x,y):
     if Grid[x][y] // 10 ==5:
         if Grid[x][y] % 2 == 0:
@@ -179,7 +183,7 @@ def printer(n):
 
         counter += 1
 
-def pawn_space(x,y):
+def pawn_moves(x,y):
     if Grid[y][x]%2==0:
         val=-1
     else:
@@ -192,6 +196,46 @@ def pawn_space(x,y):
         Active[y+val][x-1] = 1
     if x<xGrid-1 and  (Grid[y + val][x + 1] % 2 != Grid[y][x] % 2 and Grid[y + val][x + 1] != 0):
         Active[y + val][x + 1] = 1
+def rook_moves(x,y):
+    e=(Grid[y][x]+1)%2
+    x2=x+1
+    while(x2<xGrid):
+        if(Grid[y][x2]==0):
+            Active[y][x2]=1
+        elif(Grid[y][x2]%2==e):
+            Active[y][x2]=1
+        if(Grid[y][x2]!=0):
+            break
+        x2+=1
+
+    x2=x-1
+    while(x2>=0):
+        if(Grid[y][x2]==0):
+            Active[y][x2]=1
+        elif(Grid[y][x2]%2==e):
+            Active[y][x2]=1
+        if(Grid[y][x2]!=0):
+            break
+        x2-=1
+
+    y2=y+1
+    while(y2<yGrid):
+        if(Grid[y2][x]==0):
+            Active[y2][x]=1
+        elif(Grid[y2][x]%2==e):
+            Active[y2][x]=1
+        if(Grid[y2][x]!=0):
+            break
+        y2+=1
+    y2=y-1
+    while(y2>=0):
+        if(Grid[y2][x]==0):
+            Active[y2][x]=1
+        elif(Grid[y2][x]%2==e):
+            Active[y2][x]=1
+        if(Grid[y2][x]!=0):
+            break
+        y2-=1
 
 def main():
     run=True
@@ -223,7 +267,9 @@ def main():
                     Selecter[1] = xM
                     Active[Selecter[0]][Selecter[1]] = 0
                     if (Grid[yM][xM] // 10 > 5):
-                        pawn_space(xM,yM)
+                        pawn_moves(xM,yM)
+                    if (Grid[yM][xM] // 10 ==3):
+                        rook_moves(xM,yM)
 
 
 
