@@ -51,7 +51,7 @@ Selecter=[-1,-1]
 def draw_rook(color,x,y):
     if Grid[x][y] // 10 == 3:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249,249,249)
         bx = bw // 10
         y = y * bw + 2 * bx + bx // 2
         x = x * bw + bx
@@ -70,7 +70,7 @@ def draw_rook(color,x,y):
 def draw_pawn(color,x,y):
     if Grid[x][y] // 10 > 5:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249,249,249)
         bx = bw // 10
         y = y * bw
         x = x * bw + bx + bx // 2
@@ -85,7 +85,7 @@ def draw_pawn(color,x,y):
 def draw_knight(color,x,y):
     if Grid[x][y] // 10 ==5:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249,249,249)
         bx = bw // 10
         y = y * bw + 2 * bx + bx // 2
         x = x * bw + bx
@@ -101,29 +101,29 @@ def draw_knight(color,x,y):
         pygame.draw.rect(w,(0,0,0),(y + bx,x + bx * 2,bx * 3,bx * 4),bx // 5)
         pygame.draw.rect(w,color,(y - bx // 2,x + bx * 6,bx * 6,bx * 2))
         pygame.draw.rect(w,(0,0,0),(y - bx // 2,x + bx * 6,bx * 6,bx * 2),bx // 5)
-def draw_bishop(color,x,y):
+def draw_bishop(bg,color,x,y):
     if Grid[x][y] // 10 ==4:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249, 249, 249)
+        if Active[x][y] == 0:
+            bg = (118,150,186)
         bx = bw // 10
-        y = y * bw + 2 * bx + bx // 2
-        x = x * bw + bx
-        pygame.draw.rect(w,color,(y,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx * 2,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx * 2,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx * 4,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx * 4,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y,x + bx,bx * 5,bx))
-        pygame.draw.rect(w,(0,0,0),(y,x + bx,bx * 5,bx),bx // 5)
-        pygame.draw.rect(w,color,(y + bx,x + bx * 2,bx * 3,bx * 4))
-        pygame.draw.rect(w,(0,0,0),(y + bx,x + bx * 2,bx * 3,bx * 4),bx // 5)
-        pygame.draw.rect(w,color,(y - bx // 2,x + bx * 6,bx * 6,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y - bx // 2,x + bx * 6,bx * 6,bx * 2),bx // 5)
+        y = y * bw
+        x = x * bw + bx+bx//2
+        pygame.draw.circle(w,color,(y+bw//2,x),bx)
+        pygame.draw.circle(w,(0,0,0),(y+bw//2,x),bx,bx // 5)
+        pygame.draw.ellipse(w,color,(y+bx*3,x+bx,4*bx,6*bx))
+        pygame.draw.ellipse(w,(0,0,0),(y+bx*3,x+bx ,4*bx,6*bx),bx//5)
+        pygame.draw.rect(w,bg,(y+5*bx+bx//3,x + bx * 3-bx//2,bx*2,bx))
+        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 3 - bx // 2,bx+2*bx//5,bx//5))
+        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 3 - bx // 2,bx//5,bx))
+        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 4 - bx // 2,bx + bx // 2,bx // 5))
+        pygame.draw.rect(w,color,(y+2*bx ,x + bx * 7,bx * 6,bx))
+        pygame.draw.rect(w,(0,0,0),(y + 2*bx ,x + bx * 7,bx * 6,bx ),bx // 5)
 def draw_queen(color,x,y):
     if Grid[x][y] // 10==2:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249,249,249)
         bx = bw // 10
         y = y * bw + 2 * bx + bx // 2
         x = x * bw + bx
@@ -142,7 +142,7 @@ def draw_queen(color,x,y):
 def draw_king(color,x,y):
     if Grid[x][y] // 10==1:
         if Grid[x][y] % 2 == 0:
-            color = (255,255,255)
+            color = (249,249,249)
         bx = bw // 10
         y = y * bw + 2 * bx + bx // 2
         x = x * bw + bx
@@ -165,17 +165,19 @@ def printer(n):
         y = counter % xGrid
         y2 = (x) % 2 +n
         if (counter % 2 == 0 and y2 % 2 != 0) or (counter % 2 != 0 and y2 % 2 == 0):
-            pygame.draw.rect(w,(238, 238, 210),(y * bw,x * bw,bw,bw))
+            bg=(238, 238, 210)
+            pygame.draw.rect(w,bg,(y * bw,x * bw,bw,bw))
         else:
-            pygame.draw.rect(w,(118, 150, 86),(y * bw,x * bw,bw,bw))
+            bg=(118, 150, 86)
+            pygame.draw.rect(w,bg,(y * bw,x * bw,bw,bw))
         if Active[x][y]==0:
             pygame.draw.rect(w,(118,150,186),(y * bw,x * bw,bw,bw))
 
-        color=(50,50,50)
+        color=(87, 84, 82)
         draw_rook(color,x,y)
         draw_pawn(color,x,y)
         draw_knight(color,x,y)
-        draw_bishop(color,x,y)
+        draw_bishop(bg,color,x,y)
         draw_queen(color,x,y)
         draw_king(color,x,y)
         if Active[x][y]==1:
@@ -236,7 +238,54 @@ def rook_moves(x,y):
         if(Grid[y2][x]!=0):
             break
         y2-=1
+def bishop_moves(x,y):
+    e=(Grid[y][x]+1)%2
+    x2=x+1
+    y2=y+1
+    while(x2<xGrid and y2<yGrid):
+        if(Grid[y2][x2]==0):
+            Active[y2][x2]=1
+        elif(Grid[y2][x2]%2==e):
+            Active[y2][x2]=1
+        if(Grid[y2][x2]!=0):
+            break
+        x2+=1
+        y2+=1
 
+    x2=x-1
+    y2=y-1
+    while(x2>=0 and y2>=0):
+        if(Grid[y2][x2]==0):
+            Active[y2][x2]=1
+        elif(Grid[y2][x2]%2==e):
+            Active[y2][x2]=1
+        if(Grid[y2][x2]!=0):
+            break
+        x2-=1
+        y2-=1
+
+    y2=y+1
+    x2=x-1
+    while(y2<yGrid and x2>=0):
+        if(Grid[y2][x2]==0):
+            Active[y2][x2]=1
+        elif(Grid[y2][x2]%2==e):
+            Active[y2][x2]=1
+        if(Grid[y2][x2]!=0):
+            break
+        y2+=1
+        x2-=1
+    y2=y-1
+    x2=x+1
+    while(y2>=0 and x2<xGrid):
+        if(Grid[y2][x2]==0):
+            Active[y2][x2]=1
+        elif(Grid[y2][x2]%2==e):
+            Active[y2][x2]=1
+        if(Grid[y2][x2]!=0):
+            break
+        y2-=1
+        x2+=1
 def main():
     run=True
     yM=0
@@ -270,16 +319,8 @@ def main():
                         pawn_moves(xM,yM)
                     if (Grid[yM][xM] // 10 ==3):
                         rook_moves(xM,yM)
-
-
-
-
-
-
-
-
-
-
+                    if (Grid[yM][xM] // 10 ==4):
+                        bishop_moves(xM,yM)
         keypress=pygame.key.get_pressed()
         for event in pygame.event.get():
             if keypress[pygame.K_ESCAPE] or event.type == pygame.QUIT:
