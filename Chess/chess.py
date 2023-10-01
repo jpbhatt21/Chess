@@ -1,4 +1,5 @@
 import pygame
+import os
 xGrid =8  # 19
 yGrid =8 # 25
 bw=100
@@ -46,151 +47,120 @@ def reset():
     [-1,-1,-1,-1,-1,-1,-1,-1],
     [-1,-1,-1,-1,-1,-1,-1,-1]]
 Selecter=[-1,-1]
-def draw_rook(color,x,y):
+def draw_rook(x,y):
     if Grid[x][y] // 10 == 3:
         if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
-        if Active[x][y] ==0:
-            b=bouncer//2
+            c = 301
         else:
-            b=0
-        bx = bw // 10
-        y = y * bw + 2 * bx + bx // 2
-        x = x * bw + bx+bx//2-b
-        pygame.draw.rect(w,color,(y,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx * 2,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx * 2,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx * 4,x,bx,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx * 4,x,bx,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y,x + bx,bx * 5,bx))
-        pygame.draw.rect(w,(0,0,0),(y,x + bx,bx * 5,bx),bx // 5)
-        pygame.draw.rect(w,color,(y + bx,x + bx * 2,bx * 3,bx * 4))
-        pygame.draw.rect(w,(0,0,0),(y + bx,x + bx * 2,bx * 3,bx * 4),bx // 5)
-        pygame.draw.rect(w,color,(y - bx // 2,x + bx * 6,bx * 6,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y - bx // 2,x + bx * 6,bx * 6,bx * 2),bx // 5)
-def draw_pawn(color,x,y):
-    if Grid[x][y] // 10 >5:
+            c = 311
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
+        if Active[x][y] == 0:
+            x = x*bw-bouncer
+            y = y*bw
+        else:
+            x *= bw
+            y *= bw
+
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
+
+
+def draw_pawn(x,y):
+    if Grid[x][y] // 10 > 5:
         if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
-        if Active[x][y] ==0:
-            b=bouncer//2
+            c = 601
         else:
-            b=0
-        bx = bw // 10
-        y = y * bw
-        x = x * bw + bx+bx//2 -b
-        pygame.draw.circle(w,color,(y+bw//2-bx//10,x+bx),bx)
-        pygame.draw.circle(w,(0,0,0),(y+bw//2-bx//10,x+bx),bx,bx // 5)
-        pygame.draw.rect(w,color,(y+4*bx-bx//2 ,x + bx * 2,bx * 3,bx ))
-        pygame.draw.rect(w,(0,0,0),(y + 4*bx-bx//2 ,x + bx * 2,bx * 3,bx ),bx // 5)
-        pygame.draw.rect(w,color,(y+bx*4,x + bx * 3,2*bx,3*bx))
-        pygame.draw.rect(w,(0,0,0),(y+bx*4,x + bx * 3,2*bx,3*bx),bx//5)
-        pygame.draw.rect(w,color,(y+2*bx ,x + bx * 6,bx * 6,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + 2*bx ,x + bx * 6,bx * 6,bx * 2),bx // 5)
-def draw_knight(color,x,y,bg):
+            c = 611
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
+        if Active[x][y] == 0:
+            x = x*bw-bouncer
+            y = y*bw
+        else:
+            x *= bw
+            y *= bw
+
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
+
+
+def draw_knight(x,y):
     if Grid[x][y] // 10 == 5:
         if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
-        if Active[x][y] ==0:
-            b=bouncer//2
-            bg = (118,150,186)
+            c = 501
         else:
-            b=0
-        bx = bw // 10
-        y = y * bw
-        x = x * bw + bx + bx // 2-b
-        pygame.draw.ellipse(w,color,(y + bw // 2,x-bx//2,bx+bx//2,3*bx))
-        pygame.draw.ellipse(w,(0,0,0),(y + bw // 2,x-bx//2,bx+bx//2,3*bx),bx // 5)
-
-        pygame.draw.ellipse(w,color,(y + bx*2+bx,x ,4 * bx,7 * bx))
-        pygame.draw.ellipse(w,(0,0,0),(y + bx*2+bx,x ,4 * bx,7 * bx),bx // 5)
-        pygame.draw.rect(w,bg,(y+bx+bx//2,x + bx * 3-bx//2,bx*3,bx*2))
-        pygame.draw.rect(w,(0,0,0),(y + 4*bx + bx // 2,x + bx * 3 - bx // 2,bx//5,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + 3*bx + bx //3,x + bx * 5 - bx // 2,bx +bx//3,bx//5))
-
-        pygame.draw.ellipse(w,color,(y + bx + bx // 2,x + bx ,bx * 3+bx//2,bx * 2))
-        pygame.draw.ellipse(w,(0,0,0),(y + bx + bx // 2,x + bx,bx * 3+bx//2,bx * 2),bx//5)
-
-
-        pygame.draw.rect(w,color,(y + 2 * bx,x + bx * 6,bx * 6,bx*2))
-        pygame.draw.rect(w,(0,0,0),(y + 2 * bx,x + bx * 6,bx * 6,bx*2),bx // 5)
-def draw_bishop(color,x,y,bg):
-    if Grid[x][y] // 10 ==4:
-        if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
+            c = 511
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
         if Active[x][y] == 0:
-            b=bouncer//2
-            bg = (118,150,186)
-        else: 
-            b=0
-        bx = bw // 10
-        y = y * bw
-        x = x * bw + bx+bx//2-b
-        pygame.draw.circle(w,color,(y+bw//2,x),bx)
-        pygame.draw.circle(w,(0,0,0),(y+bw//2,x),bx,bx // 5)
-        pygame.draw.ellipse(w,color,(y+bx*3,x+bx,4*bx,6*bx))
-        pygame.draw.ellipse(w,(0,0,0),(y+bx*3,x+bx ,4*bx,6*bx),bx//5)
-        pygame.draw.rect(w,bg,(y+5*bx+bx//3,x + bx * 3-bx//2,bx*2,bx))
-        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 3 - bx // 2,bx+2*bx//5,bx//5))
-        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 3 - bx // 2,bx//5,bx))
-        pygame.draw.rect(w,(0,0,0),(y + 5 * bx + bx // 3,x + bx * 4 - bx // 2,bx + bx // 2,bx // 5))
-        pygame.draw.rect(w,color,(y+2*bx ,x + bx * 7,bx * 6,bx))
-        pygame.draw.rect(w,(0,0,0),(y + 2*bx ,x + bx * 7,bx * 6,bx ),bx // 5)
-def draw_queen(color,x,y):
-    if Grid[x][y] // 10==2:
-        if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
-        if Active[x][y] ==0:
-            b=bouncer//2
+            x = x*bw-bouncer
+            y = y*bw
         else:
-            b=0
-        bx = bw // 10
-        y = y * bw + 2 * bx + bx // 2
-        x = x * bw + bx+bx//2-b
-        pygame.draw.circle(w,color,(y+3*bx//4,x-bx//3,),bx//2)
-        pygame.draw.circle(w,(0,0,0),(y + 3 * bx // 4,x - bx // 3,),bx // 2,bx//5)
-        pygame.draw.circle(w,color,(y + 3 * bx // 4 +(2*4*bx)//7,x - bx // 3,),bx // 2)
-        pygame.draw.circle(w,(0,0,0),(y + 3 * bx // 4 +(2*4*bx)//7,x - bx // 3,),bx // 2,bx // 5)
-        pygame.draw.circle(w,color,(y + 3 * bx // 4 + (4 * 4 * bx) // 7,x - bx // 3,),bx // 2)
-        pygame.draw.circle(w,(0,0,0),(y + 3 * bx // 4 + (4 * 4 * bx) // 7,x - bx // 3,),bx // 2,bx // 5)
-        pygame.draw.circle(w,color,(y + 3 * bx // 4 + (6 * 4 * bx) // 7,x - bx // 3,),bx // 2)
-        pygame.draw.circle(w,(0,0,0),(y + 3 * bx // 4 + (6 * 4 * bx) // 7,x - bx // 3,),bx // 2,bx // 5)
-        pygame.draw.rect(w,color,(y+bx//2,x,4*bx//7,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y+bx//2,x,4*bx//7,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx // 2+(2*4*bx)//7,x,4*bx//7,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx // 2+(2*4*bx)//7,x,4 * bx // 7,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx // 2+(4*4*bx)//7,x,4*bx//7,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx // 2+(4*4*bx)//7,x,4 * bx // 7,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y + bx // 2+(6*4*bx)//7,x,4*bx//7,bx * 2))
-        pygame.draw.rect(w,(0,0,0),(y + bx // 2+(6*4*bx)//7,x,4 * bx // 7,bx * 2),bx // 5)
-        pygame.draw.rect(w,color,(y+bx//2,x +bx,bx *4,bx))
-        pygame.draw.rect(w,(0,0,0),(y+bx//2,x+bx,bx * 4,bx),bx // 5)
-        pygame.draw.rect(w,color,(y + bx+bx//2,x + bx * 2,bx * 2,bx * 5))
-        pygame.draw.rect(w,(0,0,0),(y + bx+bx//2,x + bx * 2,bx * 2,bx * 5),bx // 5)
-        pygame.draw.rect(w,color,(y -bx//2,x + bx * 7,bx * 6,bx))
-        pygame.draw.rect(w,(0,0,0),(y-bx//2 ,x + bx * 7,bx * 6,bx ),bx // 5)
-def draw_king(color,x,y):
-    if Grid[x][y] // 10==1:
+            x *= bw
+            y *= bw
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
+
+
+def draw_bishop(x,y):
+    if Grid[x][y] // 10 == 4:
         if Grid[x][y] % 2 == 0:
-            color = (249, 249, 249)
-        if Active[x][y] ==0:
-            b=bouncer//2
+            c = 401
         else:
-            b=0
-        bx = bw // 10
-        y = y * bw + 2 * bx + bx // 2
-        x = x * bw + bx+bx//2-b
-        pygame.draw.rect(w,color,(y+bx+bx,x - bx,bx,bx*3))
-        pygame.draw.rect(w,(0,0,0),(y+bx+bx,x -bx,bx,bx*3),bx // 5)
-        pygame.draw.rect(w,color,(y+bx,x ,bx *3,bx))
-        pygame.draw.rect(w,(0,0,0),(y+bx,x ,bx * 3,bx),bx // 5)
-        pygame.draw.rect(w,color,(y+bx//2,x +bx*2,bx *4,bx))
-        pygame.draw.rect(w,(0,0,0),(y+bx//2,x+bx*2,bx * 4,bx),bx // 5)
-        pygame.draw.rect(w,color,(y + bx+bx//2,x + bx * 3,bx * 2,bx * 4))
-        pygame.draw.rect(w,(0,0,0),(y + bx+bx//2,x + bx * 3,bx * 2,bx * 4),bx // 5)
-        pygame.draw.rect(w,color,(y - bx // 2,x + bx * 7,bx * 6,bx))
-        pygame.draw.rect(w,(0,0,0),(y - bx // 2,x + bx * 7,bx * 6,bx ),bx // 5)
+            c = 411
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
+        if Active[x][y] == 0:
+            x = x*bw-bouncer
+            y = y*bw
+        else:
+            x *= bw
+            y *= bw
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
+
+
+def draw_queen(x,y):
+    if Grid[x][y] // 10 == 2:
+        if Grid[x][y] % 2 == 0:
+            c = 201
+        else:
+            c = 211
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
+        if Active[x][y] == 0:
+            x = x*bw-bouncer
+            y = y*bw
+        else:
+            x *= bw
+            y *= bw
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
+
+
+def draw_king(x,y):
+    if Grid[x][y] // 10 == 1:
+        if Grid[x][y] % 2 == 0:
+            c = 101
+        else:
+            c = 111
+        Mouse_Loc = pygame.mouse.get_pos()
+        if Active[x][y] == 1 and x == Mouse_Loc[1] // bw and y == Mouse_Loc[0] // bw:
+            pygame.draw.rect(w,(150,186,118),(y * bw,x * bw,bw + 1,bw + 1))
+        if Active[x][y] == 0:
+            x = x*bw-bouncer
+            y = y*bw
+        else:
+            x *= bw
+            y *= bw
+        image = pygame.image.load(os.path.join("Assets","Pieces",str(c) + ".png"))
+        w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y,x))
 
 def printer(n):
     counter = 0
@@ -208,12 +178,12 @@ def printer(n):
             pygame.draw.rect(w,(118,150,186),(y * bw,x * bw,bw,bw))
 
         color=(87, 84, 82)
-        draw_rook(color,x,y)
-        draw_pawn(color,x,y)
-        draw_knight(color,x,y,bg)
-        draw_bishop(color,x,y,bg)
-        draw_queen(color,x,y)
-        draw_king(color,x,y)
+        draw_rook(x,y)
+        draw_pawn(x,y)
+        draw_knight(x,y)
+        draw_bishop(x,y)
+        draw_queen(x,y)
+        draw_king(x,y)
         if Active[x][y]==1:
             pygame.draw.circle(w,(118,150,186),(y * bw+bw//2,x * bw+bw//2),bw//5)
 
