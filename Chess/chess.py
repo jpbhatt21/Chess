@@ -1,19 +1,41 @@
 import pygame
 import os
 import glob
+import sys
+import asyncio
+if sys.platform == 'emscripten':
+    try:
+        pygame.mixer.SoundPatch()
+    except:
+        pass
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+def get_image(key):
+    if not key in image_cache:
+        image_cache[key] = pygame.image.load(key)
+    return image_cache[key]
+pygame.mixer.pre_init(44100, 16, 2, 4096)
 image_cache = {}
 xGrid =8  # 19
 yGrid =8 # 25
 bw=100
 height = yGrid * bw
 width = xGrid * bw
-fps=60
 bouncer=0
 clock = pygame.time.Clock()
 pygame.init()
+fonta = pygame.font.Font(resource_path(os.path.join("Assets","hermit.otf")),bw // 8)
+fontb = pygame.font.Font(resource_path(os.path.join("Assets","hermit.otf")),bw // 6)
+fontc = pygame.font.Font(resource_path(os.path.join("Assets","hermit.otf")),bw // 3)
+fontd = pygame.font.Font(resource_path(os.path.join("Assets","hermit.otf")),bw // 2)
 w = pygame.display.set_mode((width,height))
-Grid=[
-    [31,51,41,21,11,43,53,33],
+pygame.display.set_caption('CzechM8')
+Selector=[-1,-1]
+Grid=[[31,51,41,21,11,43,53,33],
     [61,63,65,67,69,71,73,75],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
@@ -21,8 +43,8 @@ Grid=[
     [0,0,0,0,0,0,0,0],
     [60,62,64,66,68,70,72,74],
     [30,50,40,20,10,42,52,32],
-     [0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0]]
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0]]
 Active=[
     [-1,-1,-1,-1,-1,-1,-1,-1],
     [-1,-1,-1,-1,-1,-1,-1,-1],
@@ -48,24 +70,25 @@ def reset():
     [-1,-1,-1,-1,-1,-1,-1,-1],
     [-1,-1,-1,-1,-1,-1,-1,-1],
     [-1,-1,-1,-1,-1,-1,-1,-1]]
-Selecter=[-1,-1]
-def get_image(key):
-    if not key in image_cache:
-        image_cache[key] = pygame.image.load(key)
-    return image_cache[key]
-
-
-def ineet():
-    # images = glob.glob('Assets/JPEG/*.jpg')
-    # for image2 in images:
-    #     get_image(image2)
+def loadImg():
+    pygame.draw.rect(w,(180,192,228),(0,0,width,height))
     images = glob.glob('Assets/Pieces/*.png')
     for image2 in images:
         get_image(image2)
 def pval(n):
     n = ((((n % 100) // 10) * 10 + n % 2) - ((((n % 100) // 10) * 10 + n % 2) - 2) // 60 * 10) * 10 + 1
     return n
-
+def displayFPS(fps):
+    col_text=(52,54,76)
+    col_bg=(242,245,249)
+    y = bw
+    x = bw
+    pygame.draw.rect(w,col_bg,(x - bw // 2,y - bw // 12,bw,bw // 6))
+    pygame.draw.rect(w,col_bg,(x-bw//2,y-bw//6,bw,bw//3),bw//6,bw//10)
+    text = fontb.render(str(int(fps)),True,col_text)
+    trex = text.get_rect()
+    trex.center = (x,y)
+    w.blit(text,trex)
 def piece(x,y,c):
     if Active[x][y] == 0 :
         x = x*bw-bouncer
@@ -75,7 +98,6 @@ def piece(x,y,c):
         y *= bw
     image = get_image(os.path.join("Assets","Pieces",str(c) + ".png"))
     w.blit(pygame.transform.smoothscale(image,(bw,bw)),(y ,x))
-
 def printer(n):
     counter = 0
     pygame.draw.rect(w,(211,223,253),(0,0,bw*xGrid,bw*yGrid))
@@ -93,7 +115,6 @@ def printer(n):
             pygame.draw.circle(w,(118,150,186),(y * bw+bw//2,x * bw+bw//2),bw//5)
 
         counter += 1
-
 def pawn_moves(Active,x,y):
     if Grid[y][x]%2==0:
         val=-1
@@ -325,7 +346,8 @@ def king_moves(Active,x,y):
         elif(Grid[y+1][x2]%2==e):
             Active[y+1][x2]=1
         x2+=1
-def main():
+async def main():
+    loadImg()
     run=True
     yM=0
     sw=0
@@ -342,15 +364,15 @@ def main():
             yM = Mouse_Loc[1] // bw
             xM = Mouse_Loc[0] // bw % xGrid
         if click[0] and moved!=1:
-            if(Selecter[0]!=-1 and Active[yM][xM] ==1):
-                Grid[yM][xM] = Grid[Selecter[0]][Selecter[1]]
-                Grid[Selecter[0]][Selecter[1]] = 0
+            if(Selector[0]!=-1 and Active[yM][xM] ==1):
+                Grid[yM][xM] = Grid[Selector[0]][Selector[1]]
+                Grid[Selector[0]][Selector[1]] = 0
                 reset()
                 sw=0
                 p2=1
                 bouncer=1
-                Selecter[0]=-1
-                Selecter[1]=-1
+                Selector[0]=-1
+                Selector[1]=-1
                 clock.tick(10)
                 turn=(turn+1)%2
             elif Grid[yM][xM]!=0:
@@ -359,9 +381,9 @@ def main():
                 p2=1
                 bouncer=1
                 if(Grid[yM][xM]%2==turn):
-                    Selecter[0] = yM
-                    Selecter[1] = xM
-                    Active[Selecter[0]][Selecter[1]] = 0
+                    Selector[0] = yM
+                    Selector[1] = xM
+                    Active[Selector[0]][Selector[1]] = 0
                     if (Grid[yM][xM] // 10 > 5):
                         pawn_moves(Active,xM,yM)
                     elif (Grid[yM][xM] // 10 ==3):
@@ -386,7 +408,6 @@ def main():
             sw=1
         elif bouncer<=1:
             sw=0
-
         pygame.display.update()
-
-main()
+        await asyncio.sleep(0)
+asyncio.run(main())
